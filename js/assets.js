@@ -9,6 +9,9 @@ spd.assets.load = function(){
   spd.cars[1].image = new Image();
   spd.cars[1].image.src = 'assets/beast.png';
 
+  spd.cars[2].image = new Image();
+  spd.cars[2].image.src = 'assets/electron.png';
+
   window.addEventListener('keydown', spd.game.input, false);
   window.addEventListener('keyup', spd.game.input, false);
 }

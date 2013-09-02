@@ -55,14 +55,13 @@ spd.game.draw = function(timestamp){
 
   for(var i = 0; i < spd.cars.length; i++){
     spd.context.setTransform(1, 0, 0, 1, 0, 0);
-    spd.context.translate(spd.cars[i].virtualX + spd.cars[i].pivotX, spd.cars[i].virtualY + spd.cars[i].pivotY);
+    spd.context.translate(spd.cars[i].linearX + spd.cars[i].pivotX + this.dimensions.originX, spd.cars[i].linearY + spd.cars[i].pivotY + this.dimensions.originY);
     spd.context.rotate(Math.deg2rad(spd.cars[i].theta));
     spd.context.drawImage(spd.cars[i].image, 0, 0, 32, 17, -spd.cars[i].pivotX, -spd.cars[i].pivotY, 32, 17);
   }
 }
 
-spd.game.updatePosition = function(car)
-{
+spd.game.updatePosition = function(car){
   var delta_theta = 0, delta_x = 0, delta_y = 0;
 
   if(spd.keyboard.left)
@@ -95,37 +94,25 @@ spd.game.outsideBoundry = function(car, dx, dy){
   if(car.linearX + dx < this.dimensions.border) return true;
   if(car.linearX + dx + car.width() > this.dimensions.width - this.dimensions.border) return true;
   if(car.linearY + dy < this.dimensions.border) return true;
-  if(car.linearY + dy + car.width() > this.dimensions.width - this.dimensions.border) return true;
+  if(car.linearY + dy + car.width() > this.dimensions.height - this.dimensions.border) return true;
 
   return false;
 }
 
 spd.game.updateDisplay = function(car){
-  if(car.deltaLinearX > 0){
-    if(car.virtualX + car.deltaLinearX + car.width() > spd.canvas.width - this.dimensions.border)
+  if(car.deltaLinearX > 0)
+    if(car.linearX + car.width() > spd.canvas.width - this.dimensions.border - this.dimensions.originX)
       this.dimensions.originX -= car.deltaLinearX;
-    else
-      car.virtualX += car.deltaLinearX;
-  }
 
-  if(car.deltaLinearY > 0){
-    if(car.virtualY + car.deltaLinearY + car.width() > spd.canvas.width - this.dimensions.border)
+  if(car.deltaLinearY > 0)
+    if(car.linearY + car.width() > spd.canvas.width - this.dimensions.border - this.dimensions.originY)
       this.dimensions.originY -= car.deltaLinearY;
-    else
-      car.virtualY += car.deltaLinearY;
-  }
 
-  if(car.deltaLinearX < 0){
-    if(car.virtualX < this.dimensions.border)
+  if(car.deltaLinearX < 0)
+    if(car.linearX < this.dimensions.border - this.dimensions.originX)
       this.dimensions.originX -= car.deltaLinearX;
-    else
-      car.virtualX += car.deltaLinearX;
-  }
 
-  if(car.deltaLinearY < 0){
-    if(car.virtualY < this.dimensions.border)
+  if(car.deltaLinearY < 0)
+    if(car.linearY < this.dimensions.border - this.dimensions.originY)
       this.dimensions.originY -= car.deltaLinearY;
-    else
-      car.virtualY += car.deltaLinearY;
-  }
 }

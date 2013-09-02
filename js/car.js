@@ -1,4 +1,4 @@
-spd.cars.create = function(x, y, theta, pivot_x, pivot_y, virtual_x, virtual_y){
+spd.cars.create = function(x, y, theta, pivot_x, pivot_y){
   this.linearX = x;
   this.deltaLinearX = 0;
   this.linearY = y;
@@ -11,12 +11,10 @@ spd.cars.create = function(x, y, theta, pivot_x, pivot_y, virtual_x, virtual_y){
   this.diameter = this.radius * 2;
   this.width = function(){ return this.image.width; }
   this.height = function(){ return this.image.height; }
-  this.angularX = function(){ return this.radius + (this.radius * Math.cos(deg2rad(180 + this.theta))); }
-  this.angularY = function(){ return 0           + (this.radius * Math.sin(deg2rad(180 + this.theta))); }
+  this.angularX = function(){ return this.radius + (this.radius * Math.cos(Math.deg2rad(180 + this.theta))); }
+  this.angularY = function(){ return 0           + (this.radius * Math.sin(Math.deg2rad(180 + this.theta))); }
   this.x = function(){ return this.linearX + this.angularX(); }
   this.y = function(){ return this.linearY + this.angularY(); }
-  this.virtualX = virtual_x;
-  this.virtualY = virtual_y;
 }
 
 spd.cars.main = function(){
