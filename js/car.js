@@ -18,3 +18,7 @@ spd.cars.create = function(x, y, theta, pivot_x, pivot_y, virtual_x, virtual_y){
   this.virtualX = virtual_x;
   this.virtualY = virtual_y;
 }
+
+spd.cars.main = function(){
+  return this[0];
+}

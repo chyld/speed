@@ -40,9 +40,8 @@ spd.game.loop = function(timestamp){
 }
 
 spd.game.draw = function(timestamp){
-  var car = spd.cars[0];
-
-  this.updatePosition();
+  var car = spd.cars.main();
+  this.updatePosition(car);
   spd.context.setTransform(1, 0, 0, 1, 0, 0);
 
   for(var dr = 0; dr < this.destination.rows; dr++)
@@ -54,25 +53,16 @@ spd.game.draw = function(timestamp){
       spd.context.drawImage(spd.assets.tileset, sc*this.tilesize, sr*this.tilesize, this.tilesize, this.tilesize, dc*this.tilesize + this.dimensions.originX, dr*this.tilesize + this.dimensions.originY, this.tilesize, this.tilesize);
     }
 
-  spd.context.translate(car.virtualX + car.pivotX, car.virtualY + car.pivotY);
-  spd.context.rotate(Math.deg2rad(car.theta));
-  spd.context.drawImage(car.image, 0, 0, 32, 17, -car.pivotX, -car.pivotY, 32, 17);
+  for(var i = 0; i < spd.cars.length; i++){
+    spd.context.setTransform(1, 0, 0, 1, 0, 0);
+    spd.context.translate(spd.cars[i].virtualX + spd.cars[i].pivotX, spd.cars[i].virtualY + spd.cars[i].pivotY);
+    spd.context.rotate(Math.deg2rad(spd.cars[i].theta));
+    spd.context.drawImage(spd.cars[i].image, 0, 0, 32, 17, -spd.cars[i].pivotX, -spd.cars[i].pivotY, 32, 17);
+  }
 }
 
-spd.game.outsideBoundry = function(dx, dy){
-  var car = spd.cars[0];
-
-  if(car.linearX + dx < this.dimensions.border) return true;
-  if(car.linearX + dx + car.width() > this.dimensions.width - this.dimensions.border) return true;
-  if(car.linearY + dy < this.dimensions.border) return true;
-  if(car.linearY + dy + car.width() > this.dimensions.width - this.dimensions.border) return true;
-
-  return false;
-}
-
-spd.game.updatePosition = function()
+spd.game.updatePosition = function(car)
 {
-  var car = spd.cars[0];
   var delta_theta = 0, delta_x = 0, delta_y = 0;
 
   if(spd.keyboard.left)
@@ -88,7 +78,7 @@ spd.game.updatePosition = function()
     delta_y = -1 * Math.sin(Math.deg2rad(car.theta + delta_theta));
   }
 
-  if(this.outsideBoundry(delta_x, delta_y)) return;
+  if(this.outsideBoundry(car, delta_x, delta_y)) return;
 
   car.deltaTheta = delta_theta;
   car.deltaLinearX = delta_x;
@@ -98,11 +88,19 @@ spd.game.updatePosition = function()
   car.linearX += car.deltaLinearX;
   car.linearY += car.deltaLinearY;
 
-  this.updateDisplay();
+  this.updateDisplay(car);
 }
 
-spd.game.updateDisplay = function(){
-  var car = spd.cars[0];
+spd.game.outsideBoundry = function(car, dx, dy){
+  if(car.linearX + dx < this.dimensions.border) return true;
+  if(car.linearX + dx + car.width() > this.dimensions.width - this.dimensions.border) return true;
+  if(car.linearY + dy < this.dimensions.border) return true;
+  if(car.linearY + dy + car.width() > this.dimensions.width - this.dimensions.border) return true;
+
+  return false;
+}
+
+spd.game.updateDisplay = function(car){
   if(car.deltaLinearX > 0){
     if(car.virtualX + car.deltaLinearX + car.width() > spd.canvas.width - this.dimensions.border)
       this.dimensions.originX -= car.deltaLinearX;
