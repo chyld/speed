@@ -1,18 +1,24 @@
-window.spd = {cars: [], game: {}, keyboard: {}, assets: {}};
-window.addEventListener('load', function(){spd.initialization();}, false);
+(function(){
+  window.chyld = {};
+  chyld.speed = {cars: [], game: {}, keyboard: {}, assets: {}};
 
-spd.initialization = function(){
-  spd.oldtime = 0;
-  spd.cars.push(new spd.cars.create( 75,  75, 0, 13, 8));
-  spd.cars.push(new spd.cars.create(110,  50, 25, 17, 8));
-  spd.cars.push(new spd.cars.create(160, 150, 90, 15, 8));
+  var speed = chyld.speed;
 
-  spd.canvas = document.getElementById('the_canvas');
-  spd.context = spd.canvas.getContext('2d');
+  window.addEventListener('load', function(){speed.initialization();}, false);
 
-  spd.dbg_canvas = document.getElementById('dbg_canvas');
-  spd.dbg_context = spd.dbg_canvas.getContext('2d');
+  speed.initialization = function(){
+    speed.oldtime = 0;
+    speed.cars.push(new speed.car( 75,  75, 0, 13, 8));
+    speed.cars.push(new speed.car(110,  50, 25, 17, 8));
+    speed.cars.push(new speed.car(160, 150, 90, 15, 8));
 
-  spd.game.initialization();
-  spd.assets.load();
-}
+    speed.canvas = document.getElementById('the_canvas');
+    speed.context = speed.canvas.getContext('2d');
+
+    speed.dbg_canvas = document.getElementById('dbg_canvas');
+    speed.dbg_context = speed.dbg_canvas.getContext('2d');
+
+    speed.game.initialization();
+    speed.assets.load();
+  }
+})();
